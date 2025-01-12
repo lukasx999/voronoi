@@ -4,6 +4,8 @@ exception Failure of string
 let filename    = "out.ppm"
 let width       = 800
 let height      = 600
+(* let width       = 1920 *)
+(* let height      = 1080 *)
 let point_count = 20
 let color_bg    = 0x0
 let color_point = 0xffffff
@@ -68,7 +70,7 @@ let generate_points (count : int) : point list =
     Random.self_init ();
 
     let rec inner list i =
-        if i == count then list else
+        if i = count then list else
             let x = Random.int width in
             let y = Random.int height in
             let p : point = { x; y } in
@@ -88,17 +90,14 @@ let point_sub (p1 : point) (p2 : point) : point =
 let get_min_distance (dists : float list) : float =
     let rec inner x list =
         match list with
-        | head :: tail -> inner (if head < x || x == -1.0 then head else x) tail
+        | head :: tail -> inner (if head < x || x = -1.0 then head else x) tail
         | [] -> x
     in inner ~-.1.0 dists
 
 let index_of_list (query : float) (list : float list) : int =
-    let rec inner list index =
-        match list with
-        | head :: tail -> if head == query then index else (inner tail index+1)
-        | [] -> raise (Failure "Item not found")
-    in inner list 0
-
+    match List.find_index (fun x -> x = query) list with
+    | Some index -> index
+    | None -> raise (Failure "Item not found")
 
 let get_nearest_point (point : point) (points : point list) : point * int =
     let distances = List.map (fun p -> point_sub p point |> calculate_distance) points in
@@ -126,7 +125,7 @@ let render_points (canvas : grid) (points : point list) =
 let render (canvas : grid) (points : point list) =
     for y = 0 to height-1 do
         for x = 0 to width-1 do
-            let (nearest, index) : point * int = get_nearest_point { x; y } points in
+            let (_nearest, index) : point * int = get_nearest_point { x; y } points in
             (* canvas.(y).(x) <- int_of_float (calculate_distance nearest); *)
             (* canvas.(y).(x) <- nearest.x * nearest.y; *)
             canvas.(y).(x) <- colors.(index mod (Array.length colors));
@@ -142,7 +141,7 @@ let () =
     ignore (List.map (fun x -> print_point x) points);
 
     render canvas points;
-    render_points canvas points;
+    (* render_points canvas points; *)
 
     write_canvas_to_file canvas;
     ()
