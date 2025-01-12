@@ -6,7 +6,7 @@ let width       = 800
 let height      = 600
 (* let width       = 1920 *)
 (* let height      = 1080 *)
-let point_count = 20
+let point_count = 10
 let color_bg    = 0x0
 let color_point = 0xffffff
 
@@ -108,13 +108,15 @@ let get_nearest_point (point : point) (points : point list) : point * int =
 
 
 
-
 let render_circle (p : point) (canvas : grid) =
-    canvas.(p.y  ).(p.x  ) <- color_point;
-    canvas.(p.y+1).(p.x  ) <- color_point;
-    canvas.(p.y  ).(p.x+1) <- color_point;
-    canvas.(p.y-1).(p.x  ) <- color_point;
-    canvas.(p.y  ).(p.x-1) <- color_point;
+    let get_x x = if x < 0 then 0 else if x >= width then width-1 else x in
+    let get_y y = if y < 0 then 0 else if y >= height then height-1 else y in
+    let set x y = canvas.(get_y (p.y+y)).(get_x (p.x+x)) <- color_point in
+    set 0 0;
+    set 1 0;
+    set 0 1;
+    set (-1) 0;
+    set 0 (-1);
     ()
 
 
@@ -141,7 +143,7 @@ let () =
     ignore (List.map (fun x -> print_point x) points);
 
     render canvas points;
-    (* render_points canvas points; *)
+    render_points canvas points;
 
     write_canvas_to_file canvas;
     ()
