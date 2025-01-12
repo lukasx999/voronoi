@@ -1,4 +1,5 @@
 *.annot
+out.ppm
 *.cmo
 *.cma
 *.cmi
