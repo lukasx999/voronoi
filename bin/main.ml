@@ -188,7 +188,7 @@ let () =
     let canvas : grid = canvas_init () in
     fill_canvas canvas;
 
-    setup ();
     write_canvas_to_file canvas;
+    setup ();
     loop canvas;
     ()
