@@ -137,11 +137,7 @@ let render (canvas : grid) (points : point list) =
         done
     done
 
-
-
-
-
-let pixel_to_rlcolor (pixel : int) Color.t =
+let pixel_to_color pixel = 
     let r = (0xff land (Int.shift_right pixel (8*2))) in
     let g = (0xff land (Int.shift_right pixel (8*1))) in
     let b = (0xff land (Int.shift_right pixel (8*0))) in
@@ -153,8 +149,7 @@ let draw_canvas_on_screen (canvas : grid) =
     for y = 0 to height-1 do
         for x = 0 to width-1 do
             let pixel : int = canvas.(y).(x) in
-            let p : point = { x; y } in
-            let color = pixel_to_rlcolor pixel in
+            let color = pixel_to_color pixel in
             draw_rectangle x y rect_size rect_size color;
             ()
         done;
@@ -176,11 +171,12 @@ let rec loop (canvas : grid) =
         end_drawing ();
         loop canvas
 
+
+
+
 let () =
     let canvas : grid = canvas_init () in
     let points : point list = generate_points point_count in
-    ignore (List.map (fun x -> print_point x) points);
-
     render canvas points;
     render_points canvas points;
 
