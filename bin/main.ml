@@ -1,5 +1,4 @@
 open Printf
-open Raylib
 
 exception Failure of string
 
@@ -141,7 +140,7 @@ let pixel_to_color pixel =
     let r = (0xff land (Int.shift_right pixel (8*2))) in
     let g = (0xff land (Int.shift_right pixel (8*1))) in
     let b = (0xff land (Int.shift_right pixel (8*0))) in
-    Color.create r g b 255
+    Raylib.Color.create r g b 255
 
 let draw_canvas_on_screen (canvas : grid) =
     let rect_size = 1 in
@@ -150,10 +149,17 @@ let draw_canvas_on_screen (canvas : grid) =
         for x = 0 to width-1 do
             let pixel : int = canvas.(y).(x) in
             let color = pixel_to_color pixel in
-            draw_rectangle x y rect_size rect_size color;
+            Raylib.draw_rectangle x y rect_size rect_size color;
             ()
         done;
     done;
+    ()
+
+
+let fill_canvas (canvas : grid) =
+    let points : point list = generate_points point_count in
+    render canvas points;
+    render_points canvas points;
     ()
 
 
@@ -165,6 +171,13 @@ let setup () =
 let rec loop (canvas : grid) =
     if Raylib.window_should_close () then Raylib.close_window ()
     else
+        let open Raylib in
+
+        if is_key_pressed Key.J then (
+            print_endline "Rerendering canvas...";
+            fill_canvas canvas;
+        );
+
         begin_drawing ();
         clear_background Color.black;
         draw_canvas_on_screen canvas;
@@ -172,17 +185,13 @@ let rec loop (canvas : grid) =
         loop canvas
 
 
-let fill_canvas (canvas : grid) =
-    let points : point list = generate_points point_count in
-    render canvas points;
-    render_points canvas points;
-
 
 
 let () =
     let canvas : grid = canvas_init () in
     fill_canvas canvas;
 
-    setup () |> loop canvas
+    setup ();
+    loop canvas;
     (* write_canvas_to_file canvas; *)
     ()
