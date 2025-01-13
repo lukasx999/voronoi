@@ -184,14 +184,11 @@ let rec loop (canvas : grid) =
         end_drawing ();
         loop canvas
 
-
-
-
 let () =
     let canvas : grid = canvas_init () in
     fill_canvas canvas;
 
     setup ();
+    write_canvas_to_file canvas;
     loop canvas;
-    (* write_canvas_to_file canvas; *)
     ()
