@@ -1,4 +1,6 @@
 open Printf
+open Raylib
+
 exception Failure of string
 
 let filename    = "out.ppm"
@@ -137,7 +139,7 @@ let render (canvas : grid) (points : point list) =
 
 
 
-let () =
+let main2 () =
     let canvas : grid = canvas_init () in
     let points : point list = generate_points point_count in
     ignore (List.map (fun x -> print_point x) points);
@@ -147,3 +149,21 @@ let () =
 
     write_canvas_to_file canvas;
     ()
+
+
+
+let setup () =
+    Raylib.init_window width height "Voronoi";
+    Raylib.set_target_fps 60
+
+let rec loop () =
+    if Raylib.window_should_close () then Raylib.close_window ()
+    else
+        begin_drawing ();
+        clear_background Color.raywhite;
+        draw_text "Congrats! You created your first window!" 190 200 20
+            Color.lightgray;
+        end_drawing ();
+        loop ()
+
+let () = setup () |> loop

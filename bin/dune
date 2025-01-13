@@ -1,4 +1,4 @@
 (executable
  (public_name voronoi)
  (name main)
- (libraries voronoi))
+ (libraries voronoi raylib))
