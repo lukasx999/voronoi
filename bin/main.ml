@@ -141,10 +141,24 @@ let render (canvas : grid) (points : point list) =
 
 
 
+let pixel_to_rlcolor (pixel : int) Color.t =
+    let r = (0xff land (Int.shift_right pixel (8*2))) in
+    let g = (0xff land (Int.shift_right pixel (8*1))) in
+    let b = (0xff land (Int.shift_right pixel (8*0))) in
+    Color.create r g b 255
 
 let draw_canvas_on_screen (canvas : grid) =
-    (* let for_each_column col = Array.map (fun pixel -> write_pixel file pixel) col in *)
-    (* Array.map (fun col -> for_each_column col) canvas |> ignore; *)
+    let rect_size = 1 in
+
+    for y = 0 to height-1 do
+        for x = 0 to width-1 do
+            let pixel : int = canvas.(y).(x) in
+            let p : point = { x; y } in
+            let color = pixel_to_rlcolor pixel in
+            draw_rectangle x y rect_size rect_size color;
+            ()
+        done;
+    done;
     ()
 
 
