@@ -172,13 +172,16 @@ let rec loop (canvas : grid) =
         loop canvas
 
 
+let fill_canvas (canvas : grid) =
+    let points : point list = generate_points point_count in
+    render canvas points;
+    render_points canvas points;
+
 
 
 let () =
     let canvas : grid = canvas_init () in
-    let points : point list = generate_points point_count in
-    render canvas points;
-    render_points canvas points;
+    fill_canvas canvas;
 
     setup () |> loop canvas
     (* write_canvas_to_file canvas; *)
