@@ -139,15 +139,12 @@ let render (canvas : grid) (points : point list) =
 
 
 
-let main2 () =
-    let canvas : grid = canvas_init () in
-    let points : point list = generate_points point_count in
-    ignore (List.map (fun x -> print_point x) points);
 
-    render canvas points;
-    render_points canvas points;
 
-    write_canvas_to_file canvas;
+
+let draw_canvas_on_screen (canvas : grid) =
+    (* let for_each_column col = Array.map (fun pixel -> write_pixel file pixel) col in *)
+    (* Array.map (fun col -> for_each_column col) canvas |> ignore; *)
     ()
 
 
@@ -156,14 +153,23 @@ let setup () =
     Raylib.init_window width height "Voronoi";
     Raylib.set_target_fps 60
 
-let rec loop () =
+let rec loop (canvas : grid) =
     if Raylib.window_should_close () then Raylib.close_window ()
     else
         begin_drawing ();
-        clear_background Color.raywhite;
-        draw_text "Congrats! You created your first window!" 190 200 20
-            Color.lightgray;
+        clear_background Color.black;
+        draw_canvas_on_screen canvas;
         end_drawing ();
-        loop ()
+        loop canvas
 
-let () = setup () |> loop
+let () =
+    let canvas : grid = canvas_init () in
+    let points : point list = generate_points point_count in
+    ignore (List.map (fun x -> print_point x) points);
+
+    render canvas points;
+    render_points canvas points;
+
+    setup () |> loop canvas
+    (* write_canvas_to_file canvas; *)
+    ()
