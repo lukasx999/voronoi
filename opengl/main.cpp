@@ -100,8 +100,7 @@ static void handle_input(GLFWwindow *window) {
 }
 
 
-static float generate_num(float max) {
-    float min = 0;
+static float generate_num(float max, float min) {
     int range = max - min + 1;
     float num = rand() % range + min;
     return num;
@@ -109,17 +108,27 @@ static float generate_num(float max) {
 
 static void generate_points(float *points, size_t n) {
     for (size_t i=0; i < n; i+=2) {
-        float x = generate_num(window_width) / window_width;
-        float y = generate_num(window_height) / window_height;
+        float x = generate_num(window_width, 0) / window_width;
+        float y = generate_num(window_height, 0) / window_height;
         points[i]   = x;
         points[i+1] = y;
     }
 }
 
+static void modify_points(float *points, size_t n) {
+    for (size_t i=0; i < n; i+=2) {
+        int max = 100;
+        float x = generate_num(max, -max);
+        float y = generate_num(max, -max);
+        points[i]   += x / 10000;
+        points[i+1] += y / 10000;
+    }
+}
+
+
 
 
 int main() {
-
     srand(time(NULL));
 
     if (!glfwInit())
@@ -198,7 +207,7 @@ int main() {
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     double time_old = glfwGetTime();
-    double delay = 0.1f;
+    double delay = 0.001f;
 
     while (!glfwWindowShouldClose(window)) {
         handle_input(window);
@@ -211,7 +220,7 @@ int main() {
         double time = glfwGetTime();
 
         if (time - time_old >= delay) {
-            generate_points(data, ARRAY_LEN(data));
+            modify_points(data, ARRAY_LEN(data));
             glUniform2fv(glGetUniformLocation(shader_program, "points"), ARRAY_LEN(data)/2, data);
             time_old = time;
         }

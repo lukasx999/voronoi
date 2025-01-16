@@ -15,6 +15,10 @@ out vec4 frag_color;
 
 
 
+
+
+
+
 void main() {
     vec2 pos = gl_FragCoord.xy / window_size;
 
@@ -39,8 +43,10 @@ void main() {
 
     if (!matched) {
         // frag_color = vec4(0.0, 0.0, nearest_point.x, 1.0);
+
         float dist = distance(pos, nearest_point);
-        frag_color = vec4(0.0, 0.0, dist, 1.0); // looks kinda disturbing
+        // frag_color = vec4(0.0, 0.0, dist, 1.0);
+        frag_color = vec4(vec3(dist), 1.0);
     }
 
 
