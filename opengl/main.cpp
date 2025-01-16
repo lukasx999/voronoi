@@ -25,8 +25,8 @@
 
 typedef unsigned int uint;
 
-constexpr int window_width  = 500;
-constexpr int window_height = 500;
+constexpr int window_width  = 1200;
+constexpr int window_height = window_width;
 
 
 
@@ -215,7 +215,6 @@ int main() {
             glUniform2fv(glGetUniformLocation(shader_program, "points"), ARRAY_LEN(data)/2, data);
             time_old = time;
         }
-
 
 
         glfwPollEvents();
