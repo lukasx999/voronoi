@@ -25,7 +25,6 @@ void main() {
     //     }
     // }
 
-    // frag_color = vec4(points[1], 1.0, 1.0);
     frag_color = vec4(points[0], 0.0, 1.0);
 
     // if (flag) {
