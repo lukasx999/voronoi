@@ -1,5 +1,7 @@
+#include <array>
 #include <assert.h>
 #include <cstdio>
+#include <cstdlib>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -46,20 +48,6 @@ static char *load_file(const char *filename) {
     fclose(f);
     return str;
 }
-
-
-// static char *load_file(std::string &filename) {
-//
-//     // TODO:
-//     std::fstream file(filename);
-//     std::string str;
-//
-//     std::getline(file, str);
-//
-//
-//     return nullptr;
-// }
-
 
 static uint load_shader(const std::string &filename, GLuint type) {
     char *shader_src = load_file(filename.c_str());
@@ -112,37 +100,27 @@ static void handle_input(GLFWwindow *window) {
 }
 
 
-struct Point {
-public:
-    int x;
-    int y;
-};
-
-static int generate_num(int max) {
-    int min = 0;
+static float generate_num(float max) {
+    float min = 0;
     int range = max - min + 1;
-    int num = rand() % range + min;
+    float num = rand() % range + min;
     return num;
 }
 
-static std::vector<Point> generate_points(int n) {
-    std::vector<Point> v;
-
-    for (size_t i=0; i < (size_t) n; ++i) {
-        Point p = {
-            .x = generate_num(window_width),
-            .y = generate_num(window_height)
-        };
-        v.push_back(p);
+static void generate_points(float *points, size_t n) {
+    for (size_t i=0; i < n; i+=2) {
+        float x = generate_num(window_width) / window_width;
+        float y = generate_num(window_height) / window_height;
+        points[i]   = x;
+        points[i+1] = y;
     }
-
-    return v;
-
 }
 
 
 
 int main() {
+
+    srand(time(NULL));
 
     if (!glfwInit())
         return EXIT_FAILURE;
@@ -205,12 +183,11 @@ int main() {
     // window size uniform
     glUniform2f(glGetUniformLocation(shader_program, "window_size"), window_width, window_height);
 
+
     // points uniform
-    float data[4] = {
-        0.5f, 0.5f,
-        // (float) window_width/2, (float) window_height/2,
-        1, 1
-    };
+    float data[12] = { 0 };
+    assert(ARRAY_LEN(data) % 2 == 0);
+    generate_points(data, ARRAY_LEN(data));
     glUniform2fv(glGetUniformLocation(shader_program, "points"), ARRAY_LEN(data)/2, data);
 
 
@@ -220,6 +197,9 @@ int main() {
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    double time_old = glfwGetTime();
+    double delay = 0.1f;
+
     while (!glfwWindowShouldClose(window)) {
         handle_input(window);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -227,6 +207,16 @@ int main() {
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+
+        double time = glfwGetTime();
+
+        if (time - time_old >= delay) {
+            generate_points(data, ARRAY_LEN(data));
+            glUniform2fv(glGetUniformLocation(shader_program, "points"), ARRAY_LEN(data)/2, data);
+            time_old = time;
+        }
+
+
 
         glfwPollEvents();
         glfwSwapBuffers(window);
