@@ -206,11 +206,11 @@ int main() {
     glUniform2f(glGetUniformLocation(shader_program, "window_size"), window_width, window_height);
 
     // points uniform
-    uint data[4] = {
-        window_width/2, window_height/2,
+    float data[4] = {
+        (float) window_width/2, (float) window_height/2,
         1, 1
     };
-    glUniform2uiv(glGetUniformLocation(shader_program, "points"), ARRAY_LEN(data)/2, data);
+    glUniform2fv(glGetUniformLocation(shader_program, "points"), ARRAY_LEN(data)/2, data);
 
 
 

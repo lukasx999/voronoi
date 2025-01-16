@@ -18,14 +18,15 @@ out vec4 frag_color;
 void main() {
     vec2 pos = gl_FragCoord.xy;
 
-    bool flag = false;
-    for (int i=0; i < POINTS_LEN; ++i) {
-        if (pos == points[i]) {
-            flag = true;
-        }
-    }
+    // bool flag = false;
+    // for (int i=0; i < POINTS_LEN; ++i) {
+    //     if (pos == points[i]) {
+    //         flag = true;
+    //     }
+    // }
 
-    frag_color = vec4(points[1], 1.0, 1.0);
+    // frag_color = vec4(points[1], 1.0, 1.0);
+    frag_color = vec4(points[0], 0.0, 1.0);
 
     // if (flag) {
     //     frag_color = vec4(1.0, 1.0, 1.0, 1.0);
