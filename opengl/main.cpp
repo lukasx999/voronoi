@@ -11,9 +11,11 @@
 #include <random>
 #include <iostream>
 #include <fstream>
+#include <memory>
 #include <print>
 #include <vector>
 #include <string>
+#include <utility>
 
 #define GLFW_INCLUDE_NONE
 #include <glad/gl.h>

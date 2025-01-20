@@ -45,8 +45,9 @@ void main() {
         // frag_color = vec4(0.0, 0.0, nearest_point.x, 1.0);
 
         float dist = distance(pos, nearest_point);
-        // frag_color = vec4(0.0, 0.0, dist, 1.0);
-        frag_color = vec4(vec3(dist), 1.0);
+        vec3 c = vec3(0.33, 0.16, 0.87);
+        frag_color = vec4(c*dist, 1.0);
+        // frag_color = vec4(vec3(dist), 1.0);
     }
 
 
